@@ -4,7 +4,7 @@ import { List, Map } from 'immutable';
 import Immutable from 'immutable';
 import { setEntries, next, vote } from '../src/core';
 
-describe('application logc', () => {
+describe('application logic', () => {
 
   describe('setEntries', () => {
 
@@ -80,6 +80,23 @@ describe('application logc', () => {
           pair: ['Sunshine', 'Millions']
         },
         entries: ['127 Hours', 'Trainspotting', '28 Days Later']
+      }));
+    });
+
+    it('marks winner when just one entry left', () => {
+      const state = Immutable.fromJS({
+        vote: {
+          pair: ['Trainspotting', '28 Days Later'],
+          tally: {
+            'Trainspotting': 4,
+            '28 Days Later': 2
+          }
+        },
+        entries: []
+      });
+      const nextState = next(state);
+      expect(nextState).to.equal(Map({
+        winner: 'Trainspotting'
       }));
     });
 
