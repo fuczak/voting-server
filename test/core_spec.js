@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { List, Map } from 'immutable';
+import Immutable from 'immutable';
 import { setEntries, next, vote } from '../src/core';
 
 describe('application logc', () => {
@@ -40,6 +41,46 @@ describe('application logc', () => {
           }),
           entries: List.of('Sunshine')
         }));
+    });
+
+    it('puts winner of the current vote back to entries', () => {
+      const state = Immutable.fromJS({
+        vote: {
+          pair: ['Trainspotting', '28 Days Later'],
+          tally: {
+            'Trainspotting': 4,
+            '28 Days Later': 2
+          }
+        },
+        entries: ['Sunshine', 'Millions', '127 Hours']
+      });
+      const nextState = next(state);
+      expect(nextState).to.equal(Immutable.fromJS({
+        vote: {
+          pair: ['Sunshine', 'Millions']
+        },
+        entries: ['127 Hours', 'Trainspotting']
+      }));
+    });
+
+    it('puts both from tied vote back to entries', () => {
+      const state = Immutable.fromJS({
+        vote: {
+          pair: ['Trainspotting', '28 Days Later'],
+          tally: {
+            'Trainspotting': 3,
+            '28 Days Later': 3
+          }
+        },
+        entries: ['Sunshine', 'Millions', '127 Hours']
+      });
+      const nextState = next(state);
+      expect(nextState).to.equal(Immutable.fromJS({
+        vote: {
+          pair: ['Sunshine', 'Millions']
+        },
+        entries: ['127 Hours', 'Trainspotting', '28 Days Later']
+      }));
     });
 
   });
