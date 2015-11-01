@@ -135,6 +135,19 @@ describe('application logic', () => {
       }));
     });
 
+    it('does not allow entries to be voted on when they are not present in current pair', () => {
+      const state = Immutable.fromJS({
+        pair: ['Trainspotting', '28 Days Later'],
+        tally: {
+          'Trainspotting': 1,
+          '28 Days Later': 1
+        }
+      });
+      const nextState = vote(state, 'Sunshine');
+
+      expect(nextState).to.equal(state);
+    });
+
   });
 
 });
